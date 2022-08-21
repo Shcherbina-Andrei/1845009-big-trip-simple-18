@@ -1,5 +1,4 @@
 import {createElement} from '../render.js';
-import {offersByType} from '../mock/const.js';
 import {formatStringToDate} from '../utils/util.js';
 import {formatStringToTime} from '../utils/util.js';
 

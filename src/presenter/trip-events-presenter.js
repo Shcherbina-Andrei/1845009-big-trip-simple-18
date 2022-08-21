@@ -1,5 +1,4 @@
 import EventEditView from '../view/event-edit-view.js';
-import EventNewView from '../view/event-new-view.js';
 import SortView from '../view/sort-view.js';
 import EventPoinView from '../view/event-point-view.js';
 import EventsListView from '../view/events-list.js';
