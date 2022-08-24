@@ -1,7 +1,7 @@
 import {getRandomInteger} from '../utils/util.js';
 import {tripTypes} from '../const.js';
-import {offersByType} from './const.js';
-import {destinations} from './const.js';
+import {offersByType} from './mocks.js';
+import {destinations} from './mocks.js';
 import {getRandomArrayElement} from '../utils/util.js';
 
 const getTripType = function () {

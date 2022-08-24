@@ -23,4 +23,8 @@ const formatSlashDate = function (dueDate) {
   return dayjs(dueDate).format('DD/MM/YY HH:mm');
 };
 
-export {getRandomInteger, getRandomArrayElement, formatStringToDate, formatStringToTime, formatSlashDate};
+const formatFirstLetterToUpperCase = function (word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
+
+export {getRandomInteger, getRandomArrayElement, formatStringToDate, formatStringToTime, formatSlashDate, formatFirstLetterToUpperCase};

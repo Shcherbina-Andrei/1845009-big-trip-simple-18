@@ -10,21 +10,16 @@ const createTemplateOffers = function (offers) {
       </li>`
     );
   }
-  const newOffersContainer = document.createElement('div');
-  for (let i = 0; i < offers.length; i++) {
-    const newOfferElement = document.createElement('li');
-    newOfferElement.classList.add('event__offer');
-    newOfferElement.insertAdjacentHTML('beforeend', `
-      <span class="event__offer-title">${offers[i].title}</span>
-        &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offers[i].price}</span>
-    `);
-    newOffersContainer.appendChild(newOfferElement);
-  }
-  return newOffersContainer.innerHTML;
+  const selectedOffers = offers.map((offer) => `
+    <li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </li>`).join('');
+  return selectedOffers;
 };
 
-const createEventPointTemplate = (point, destination, offers) => {
+const createPointTemplate = (point, destination, offers) => {
   const {basePrice, type, dateFrom, dateTo} = point;
   const {name} = destination;
 
@@ -61,7 +56,7 @@ const createEventPointTemplate = (point, destination, offers) => {
   );
 };
 
-export default class EventPointView {
+export default class PointView {
   #point = null;
   #destination = null;
   #offers = null;
@@ -74,7 +69,7 @@ export default class EventPointView {
   }
 
   get template() {
-    return createEventPointTemplate(this.#point, this.#destination, this.#offers);
+    return createPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
   get element() {
