@@ -9,10 +9,11 @@ const getDescription = function () {
   return descriptions[getRandomInteger(0, descriptions.length - 1)];
 };
 
-const getPhoto = () => ({
-  src: `http://picsum.photos/248/152?r=${getRandomInteger(1, 20)}`,
-  description: 'In rutrum ac purus sit amet tempus'
-});
+const getPhoto = function () {
+  return {
+    src: `http://picsum.photos/248/152?r=${getRandomInteger(1, 20)}`,
+    description: 'In rutrum ac purus sit amet tempus'
+  };};
 
 const offersByType = [
   {
