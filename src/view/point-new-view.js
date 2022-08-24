@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
 
-const createNewEventTemplate = function () {
+const createNewPointTemplate = function () {
   return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -163,11 +163,11 @@ const createNewEventTemplate = function () {
   </form>`;
 };
 
-export default class EventNewView {
+export default class PointNewView {
   #element = null;
 
   get template() {
-    return createNewEventTemplate();
+    return createNewPointTemplate();
   }
 
   get element() {

@@ -1,6 +1,5 @@
 import {getTripPoint} from '../mock/trip-point.js';
-import {destinations} from '../mock/const.js';
-import {offersByType} from '../mock/const.js';
+import {destinations, offersByType} from '../mock/mocks.js';
 
 export default class PointModel {
   #points = Array.from({length: 10}, getTripPoint);

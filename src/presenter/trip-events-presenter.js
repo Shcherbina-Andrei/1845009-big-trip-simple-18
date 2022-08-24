@@ -1,7 +1,7 @@
-import EventEditView from '../view/event-edit-view.js';
+import PointEditView from '../view/point-edit-view.js';
 import SortView from '../view/sort-view.js';
-import EventPointView from '../view/event-point-view.js';
-import EventsListView from '../view/events-list.js';
+import PointView from '../view/point-view.js';
+import EventsListView from '../view/points-list.js';
 import noPointsView from '../view/no-points-view.js';
 import {render} from '../render.js';
 
@@ -38,8 +38,8 @@ export default class TripEventsPresenter {
     const offesByType = this.#pointModel.getCurrentOffersByType(point);
     const destination = this.#pointModel.getCurrentDestination(point);
 
-    const pointComponent = new EventPointView(point, destination, selectedOffers);
-    const pointEditComponent = new EventEditView(point, this.#tripDestinations, offesByType);
+    const pointComponent = new PointView(point, destination, selectedOffers);
+    const pointEditComponent = new PointEditView(point, this.#tripDestinations, offesByType);
 
     const replaceCardToForm = () => {
       this.#eventsListComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);

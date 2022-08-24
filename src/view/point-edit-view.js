@@ -1,12 +1,13 @@
 import {createElement} from '../render.js';
 import {tripTypes} from '../const.js';
 import {formatSlashDate} from '../utils/util.js';
+import {formatFirstLetterToUpperCase} from '../utils/util.js';
 
 const createInputTypeTemplate = function (currentType) {
   const tripTypesList = tripTypes.map((tripType) => `
   <div class="event__type-item">
     <input id="event-type-${tripType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${tripType === currentType ? 'checked' : ''}>
-    <label class="event__type-label  event__type-label--${tripType}" for="event-type-${tripType}-1">${tripType.charAt(0).toUpperCase() + tripType.slice(1)}</label>
+    <label class="event__type-label  event__type-label--${tripType}" for="event-type-${tripType}-1">${formatFirstLetterToUpperCase(tripType)}</label>
   </div>`).join('');
 
   return (
@@ -29,7 +30,7 @@ const createDestinationTemplate = function (tripDestination, allDestinations, ty
   const destinationsOptions = allDestinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
   return (
     `<label class="event__label  event__type-output" for="event-destination-1">
-       ${type.charAt(0).toUpperCase() + type.slice(1)}
+       ${formatFirstLetterToUpperCase(type)}
      </label>
      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripDestination.name}" list="destination-list-1">
      <datalist id="destination-list-1">
@@ -72,7 +73,7 @@ const createOffersTemplate = function (currentOffers, offersByType) {
   return availableOffers;
 };
 
-const createNewEventEditTemplate = function (point, allDestinations, offersByType) {
+const createPointEditTemplate = function (point, allDestinations, offersByType) {
   const {basePrice, dateFrom, dateTo, destination, type, offers} = point;
   const tripDestination = allDestinations.find((pointDestination) => (pointDestination.id === destination));
 
@@ -119,7 +120,7 @@ const createNewEventEditTemplate = function (point, allDestinations, offersByTyp
   );
 };
 
-export default class EventEditView {
+export default class PointEditView {
   #point = null;
   #destinations = null;
   #offersByType = null;
@@ -132,7 +133,7 @@ export default class EventEditView {
   }
 
   get template() {
-    return createNewEventEditTemplate(this.#point, this.#destinations, this.#offersByType);
+    return createPointEditTemplate(this.#point, this.#destinations, this.#offersByType);
   }
 
   get element() {
