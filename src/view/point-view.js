@@ -1,8 +1,7 @@
-import {createElement} from '../render.js';
-import {formatStringToDate} from '../utils/util.js';
-import {formatStringToTime} from '../utils/util.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {formatStringToDate, formatStringToTime} from '../utils/format-date';
 
-const createTemplateOffers = function (offers) {
+const createTemplateOffers = function(offers) {
   if (offers.length === 0) {
     return (
       `<li class="event__offer">
@@ -56,13 +55,13 @@ const createPointTemplate = (point, destination, offers) => {
   );
 };
 
-export default class PointView {
+export default class PointView extends AbstractView {
   #point = null;
   #destination = null;
   #offers = null;
-  #element = null;
 
   constructor(point, destination, offers) {
+    super();
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
@@ -72,15 +71,13 @@ export default class PointView {
     return createPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setOpenFormHandler = (callback) => {
+    this._callback.openForm = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#openFormHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #openFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.openForm();
+  };
 }

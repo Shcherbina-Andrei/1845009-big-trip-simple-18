@@ -1,9 +1,9 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {tripTypes} from '../const.js';
-import {formatSlashDate} from '../utils/util.js';
-import {formatFirstLetterToUpperCase} from '../utils/util.js';
+import {formatSlashDate} from '../utils/format-date';
+import {formatFirstLetterToUpperCase} from '../utils/format-text';
 
-const createInputTypeTemplate = function (currentType) {
+const createInputTypeTemplate = function(currentType) {
   const tripTypesList = tripTypes.map((tripType) => `
   <div class="event__type-item">
     <input id="event-type-${tripType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${tripType === currentType ? 'checked' : ''}>
@@ -26,7 +26,7 @@ const createInputTypeTemplate = function (currentType) {
   );
 };
 
-const createDestinationTemplate = function (tripDestination, allDestinations, type) {
+const createDestinationTemplate = function(tripDestination, allDestinations, type) {
   const destinationsOptions = allDestinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
   return (
     `<label class="event__label  event__type-output" for="event-destination-1">
@@ -48,7 +48,7 @@ const createTimeTemplate = function(dateFrom, dateTo) {
   );
 };
 
-const createPriceTemplate = function (price) {
+const createPriceTemplate = function(price) {
   return (
     `<label class="event__label" for="event-price-1">
        <span class="visually-hidden">${price}</span>
@@ -58,7 +58,7 @@ const createPriceTemplate = function (price) {
   );
 };
 
-const createOffersTemplate = function (currentOffers, offersByType) {
+const createOffersTemplate = function(currentOffers, offersByType) {
   const availableOffers = offersByType.offers.map((offer) => `
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title.toLowerCase()}-1" type="checkbox"
@@ -120,13 +120,13 @@ const createPointEditTemplate = function (point, allDestinations, offersByType) 
   );
 };
 
-export default class PointEditView {
+export default class PointEditView extends AbstractView {
   #point = null;
   #destinations = null;
   #offersByType = null;
-  #element = null;
 
   constructor(point, destinations, offersByType) {
+    super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offersByType = offersByType;
@@ -136,15 +136,23 @@ export default class PointEditView {
     return createPointEditTemplate(this.#point, this.#destinations, this.#offersByType);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setCloseFormHandler = (callback) => {
+    this._callback.closeForm = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeFormHandler);
+  };
 
-    return this.#element;
-  }
+  setSubmitFormHandler = (callback) => {
+    this._callback.submitForm = callback;
+    this.element.addEventListener('submit', this.#submitFormHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #closeFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeForm();
+  };
+
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.submitForm();
+  };
 }

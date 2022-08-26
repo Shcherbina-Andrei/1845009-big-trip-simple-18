@@ -1,15 +1,13 @@
-import {getRandomInteger} from '../utils/util.js';
+import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
 import {tripTypes} from '../const.js';
-import {offersByType} from './mocks.js';
-import {destinations} from './mocks.js';
-import {getRandomArrayElement} from '../utils/util.js';
+import {offersByType, destinations} from './mocks.js';
 
-const getTripType = function () {
+const getTripType = function() {
   const randomIndex = getRandomInteger(0, tripTypes.length - 1);
   return tripTypes[randomIndex];
 };
 
-const getRandomOffersIds = function (type) {
+const getRandomOffersIds = function(type) {
   const randomIds = [];
   const currentOffers = offersByType.find((offer) => offer.type === type);
   const randomLength = getRandomInteger(0, currentOffers.offers.length);
@@ -22,7 +20,7 @@ const getRandomOffersIds = function (type) {
   return randomIds;
 };
 
-export const getTripPoint = function () {
+export const getTripPoint = function() {
   const type = getTripType();
   const destination = getRandomArrayElement(destinations);
 
