@@ -12,6 +12,6 @@ const pointsModel = new PointModel();
 const tripEventsPresenter = new TripEventsPresenter();
 
 
-render(new FilterView(), tripControlsElement);
+render(new FilterView(pointsModel.points), tripControlsElement);
 tripEventsPresenter.init(tripEventsElement, pointsModel);
 
