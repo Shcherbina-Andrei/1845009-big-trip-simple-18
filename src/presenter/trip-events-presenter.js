@@ -25,7 +25,7 @@ export default class TripEventsPresenter {
     if (this.#tripPoints.length === 0) {
       render(new noPointsView(), this.#tripEventsContainer);
     } else {
-      render (new SortView(), this.#tripEventsContainer);
+      render(new SortView(), this.#tripEventsContainer);
       render(this.#eventsListComponent, this.#tripEventsContainer);
       for (let i = 0; i < this.#tripPoints.length; i++) {
         this.#renderPoint(this.#tripPoints[i]);
@@ -33,7 +33,7 @@ export default class TripEventsPresenter {
     }
   };
 
-  #renderPoint = function (point) {
+  #renderPoint = function(point) {
     const selectedOffers = this.#pointModel.getSelectedOffers(point);
     const offesByType = this.#pointModel.getCurrentOffersByType(point);
     const destination = this.#pointModel.getCurrentDestination(point);
@@ -41,11 +41,11 @@ export default class TripEventsPresenter {
     const pointComponent = new PointView(point, destination, selectedOffers);
     const pointEditComponent = new PointEditView(point, this.#tripDestinations, offesByType);
 
-    const replaceCardToForm = () => {
+    const replaceCardToForm = function() {
       replace(pointEditComponent, pointComponent);
     };
 
-    const replaceFormToCard = () => {
+    const replaceFormToCard = function() {
       replace(pointComponent, pointEditComponent);
     };
 
