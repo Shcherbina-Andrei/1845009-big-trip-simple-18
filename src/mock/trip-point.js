@@ -28,8 +28,8 @@ export const getTripPoint = function() {
   return ({
     id: nanoid(),
     basePrice: getRandomInteger(200, 1500),
-    dateFrom: `2019-07-${getRandomInteger(10, 14)}T22:${getRandomInteger(30, 55)}:56.845Z`,
-    dateTo: `2019-07-${14, 20}T11:${getRandomInteger(30, 55)}:13.375Z`,
+    dateFrom: `2019-07-${getRandomInteger(10, 14)}T10:${getRandomInteger(30, 55)}:56.845Z`,
+    dateTo: `2019-07-${14, 20}T14:${getRandomInteger(30, 55)}:13.375Z`,
     destination: destination.id,
     offers: getRandomOffersIds(type),
     type

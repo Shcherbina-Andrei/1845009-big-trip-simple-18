@@ -4,6 +4,8 @@ import noPointsView from '../view/no-points-view.js';
 import {render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import {updateItem} from '../utils/common.js';
+import {SortType} from '../const.js';
+import {sortByDay, sortByPrice} from '../utils/sort.js';
 
 export default class TripPointsPresenter {
   #tripPointsContainer = null;
@@ -13,6 +15,8 @@ export default class TripPointsPresenter {
   #noPointsComponent = new noPointsView();
 
   #tripPoints = [];
+  #sourcedTripPoints = [];
+  #currentSortType;
   #pointPresenter = new Map();
 
   constructor(tripPointsContainer, pointModel) {
@@ -22,12 +26,14 @@ export default class TripPointsPresenter {
 
   init = function() {
     this.#tripPoints = [...this.#pointModel.points];
+    this.#sourcedTripPoints = [...this.#pointModel.points];
 
     this.#renderTripPoints();
   };
 
   #handlePointChange = (updatedPoint) => {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints. updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -35,8 +41,32 @@ export default class TripPointsPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
+  #sortPoints = (type) => {
+    switch (type) {
+      case SortType.DAY:
+        this.#tripPoints.sort(sortByDay);
+        break;
+      case SortType.PRICE:
+        this.#tripPoints.sort(sortByPrice);
+        break;
+    }
+
+    this.#currentSortType = type;
+  };
+
+  #handleSortTypeChange = (type) => {
+    if (this.#currentSortType === type) {
+      return;
+    }
+
+    this.#sortPoints(type);
+    this.#clearPointsList();
+    this.#renderPointsList();
+  };
+
   #renderSort = function() {
     render(this.#sortComponent, this.#tripPointsContainer, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderPointsList = function() {
@@ -64,6 +94,7 @@ export default class TripPointsPresenter {
       this.#renderNoPoints();
     } else {
       this.#renderSort();
+      this.#sortPoints(SortType.DAY);
       this.#renderPointsList();
     }
   };
