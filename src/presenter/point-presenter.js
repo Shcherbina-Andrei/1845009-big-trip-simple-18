@@ -9,6 +9,7 @@ const Mode = {
 
 export default class PointPresenter {
   #pointsListContainer = null;
+  #changeData = null;
   #changeMode = null;
 
   #pointComponent = null;
@@ -17,23 +18,25 @@ export default class PointPresenter {
   #point = null;
   #mode = Mode.DEFAULT;
 
-  constructor(pointsListContainer, changeMode) {
+  constructor(pointsListContainer, changeData, changeMode) {
     this.#pointsListContainer = pointsListContainer;
+    this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
   init = function(point, pointsModel) {
     this.#point = point;
-
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
+    const allOffers = pointsModel.offersByType;
     const selectedOffers = pointsModel.getSelectedOffers(this.#point);
-    const offersByType = pointsModel.getCurrentOffersByType(this.#point);
+    const currentOffersByType = pointsModel.getCurrentOffersByType(this.#point);
     const currentDestination = pointsModel.getCurrentDestination(this.#point);
     const destinations = pointsModel.destinations;
+
     this.#pointComponent = new PointView(point, currentDestination, selectedOffers);
-    this.#pointEditComponent = new PointEditView(point, destinations, offersByType);
+    this.#pointEditComponent = new PointEditView(point, destinations, allOffers, currentOffersByType);
 
     this.#pointComponent.setOpenFormHandler(this.#handleOpenForm);
     this.#pointEditComponent.setSubmitFormHandler(this.#handleSubmitForm);
@@ -60,11 +63,12 @@ export default class PointPresenter {
 
   resetView = function() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   };
 
-  #replaceCardToForm = function(){
+  #replaceCardToForm = function() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
@@ -77,9 +81,10 @@ export default class PointPresenter {
     this.#mode = Mode.DEFAULT;
   };
 
-  #onEscKeyDown = function(evt) {
+  #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   };
@@ -88,11 +93,13 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleSubmitForm = () => {
+  #handleSubmitForm = (point) => {
+    this.#changeData(point);
     this.#replaceFormToCard();
   };
 
   #handleCloseForm = () => {
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToCard();
   };
 }
