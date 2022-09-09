@@ -33,8 +33,8 @@ export default class TripPointsPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints. updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#pointModel);
   };
 
   #handleModeChange = () => {
@@ -84,7 +84,7 @@ export default class TripPointsPresenter {
   };
 
   #renderPoint = function(point) {
-    const pointPresenter = new PointPresenter(this.#pointsListComponent.element, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#pointsListComponent.element, this.#handlePointChange, this.#handleModeChange);
     pointPresenter.init(point, this.#pointModel);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
