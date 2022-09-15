@@ -3,6 +3,10 @@ import {tripTypes} from '../const.js';
 import {formatSlashDate} from '../utils/format-date';
 import {formatFirstLetterToUpperCase} from '../utils/format-text';
 
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
+
 const createInputTypeTemplate = function(currentType) {
   const tripTypesList = tripTypes.map((tripType) => `
   <div class="event__type-item">
@@ -121,12 +125,22 @@ const createPointEditTemplate = function (data) {
 };
 
 export default class PointEditView extends AbstractStatefulView {
+  #datepicker = null;
 
   constructor(point, destinations, allOffers, offersByType) {
     super();
     this._state = PointEditView.parsePointToState(point, destinations, allOffers, offersByType);
     this.#setInnerHandlers();
   }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
 
   get template() {
     return createPointEditTemplate(this._state);
@@ -179,15 +193,15 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #dateFromInputHandler = (evt) => {
-    this._setState({
-      dateFrom: evt.target.value
+  #dateFromInputHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate
     });
   };
 
-  #dateToInputHandler = (evt) => {
-    this._setState({
-      dateTo: evt.target.value
+  #dateToInputHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate
     });
   };
 
@@ -206,9 +220,33 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
+  #setDatepickerFrom = () => {
+    this.#datepicker = flatpickr (
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromInputHandler
+      }
+    );
+  };
+
+  #setDatepickerTo = () => {
+    this.#datepicker = flatpickr (
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToInputHandler
+      }
+    );
+  };
+
   #setInnerHandlers = () => {
-    this.element.querySelector('#event-start-time-1').addEventListener('input', this.#dateFromInputHandler);
-    this.element.querySelector('#event-end-time-1').addEventListener('input', this.#dateToInputHandler);
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
     this.element.querySelector('#event-price-1').addEventListener('input', this.#priceInputHandler);
 
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersTogglesHandler);
