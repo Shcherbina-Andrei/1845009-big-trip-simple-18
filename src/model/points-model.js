@@ -1,36 +1,50 @@
 import {getTripPoint} from '../mock/trip-point.js';
-import {destinations, offersByType} from '../mock/mocks.js';
+import Observable from '../framework/observable.js';
 
-export default class PointModel {
+export default class PointModel extends Observable {
   #points = Array.from({length: 10}, getTripPoint);
-  #destinations = destinations;
-  #offersByType = offersByType;
 
   get points() {
     return this.#points;
   }
 
-  get destinations() {
-    return this.#destinations;
-  }
+  updatePoint = (updateType, update) => {
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
-  get offersByType() {
-    return this.#offersByType;
-  }
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting point');
+    }
 
-  getSelectedOffers = function(point) {
-    const selectedOffers = this.#offersByType.find((offer) => offer.type === point.type)
-      .offers.filter((offer) => point.offers.includes(offer.id));
-    return selectedOffers;
+    this.#points = [
+      ...this.#points.slice(0, index),
+      update,
+      ...this.#points.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
   };
 
-  getCurrentOffersByType = function(point) {
-    const currentOffersByType = this.#offersByType.find((offer) => offer.type === point.type);
-    return currentOffersByType;
+  addPoint = (updateType, update) => {
+    this.#points = [
+      update,
+      ...this.#points
+    ];
+
+    this._notify(updateType, update);
   };
 
-  getCurrentDestination = function(point) {
-    this.currentDestination = destinations.find((destination) => (destination.id === point.destination));
-    return this.currentDestination;
+  deletePoint = (updateType, update) => {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t delete unexisting point');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      ...this.#points.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
   };
 }

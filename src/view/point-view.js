@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {formatStringToDate, formatStringToTime} from '../utils/format-date';
+import {formatStringToDate, formatStringToTime} from '../utils/date-utils.js';
 
-const createTemplateOffers = function(offers) {
-  if (offers.length === 0) {
+const createTemplateOffers = (offers) => {
+  if (!offers?.length) {
     return (
       `<li class="event__offer">
         <span class="event__offer-title">No additional offers</span>
@@ -21,7 +21,6 @@ const createTemplateOffers = function(offers) {
 const createPointTemplate = (point, destination, offers) => {
   const {basePrice, type, dateFrom, dateTo} = point;
   const {name} = destination;
-
   const eventDate = formatStringToDate(dateFrom);
 
   const timeFrom = formatStringToTime(dateFrom);

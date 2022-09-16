@@ -1,6 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import PointView from '../view/point-view.js';
 import PointEditView from '../view/point-edit-view.js';
+import {UserActions, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -16,6 +17,11 @@ export default class PointPresenter {
   #pointEditComponent = null;
 
   #point = null;
+  #allOffers = null;
+  #selectedOffers = null;
+  #currentOffersByType = null;
+  #currentDestination = null;
+  #destinations = null;
   #mode = Mode.DEFAULT;
 
   constructor(pointsListContainer, changeData, changeMode) {
@@ -24,23 +30,20 @@ export default class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = function(point, pointsModel) {
+  init = (point, offersModel, destinationsModel) => {
     this.#point = point;
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    const allOffers = pointsModel.offersByType;
-    const selectedOffers = pointsModel.getSelectedOffers(this.#point);
-    const currentOffersByType = pointsModel.getCurrentOffersByType(this.#point);
-    const currentDestination = pointsModel.getCurrentDestination(this.#point);
-    const destinations = pointsModel.destinations;
+    this.#allOffers = offersModel.offersByType;
+    this.#selectedOffers = offersModel.getSelectedOffers(this.#point);
+    this.#currentOffersByType = offersModel.getCurrentOffersByType(this.#point);
+    this.#currentDestination = destinationsModel.getCurrentDestination(this.#point);
+    this.#destinations = destinationsModel.destinations;
 
-    this.#pointComponent = new PointView(point, currentDestination, selectedOffers);
-    this.#pointEditComponent = new PointEditView(point, destinations, allOffers, currentOffersByType);
+    this.#pointComponent = new PointView(point, this.#currentDestination, this.#selectedOffers);
 
     this.#pointComponent.setOpenFormHandler(this.#handleOpenForm);
-    this.#pointEditComponent.setSubmitFormHandler(this.#handleSubmitForm);
-    this.#pointEditComponent.setCloseFormHandler(this.#handleCloseForm);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointsListContainer);
@@ -69,6 +72,10 @@ export default class PointPresenter {
   };
 
   #replaceCardToForm = function() {
+    this.#pointEditComponent = new PointEditView(this.#destinations, this.#allOffers, this.#point, this.#currentOffersByType);
+    this.#pointEditComponent.setSubmitFormHandler(this.#handleSubmitForm);
+    this.#pointEditComponent.setCloseFormHandler(this.#handleCloseForm);
+    this.#pointEditComponent.setDeletePointHandler(this.#handleDeletePoint);
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
@@ -94,8 +101,20 @@ export default class PointPresenter {
   };
 
   #handleSubmitForm = (point) => {
-    this.#changeData(point);
+    this.#changeData(
+      UserActions.UPDATE_POINT,
+      UpdateType.MINOR,
+      point
+    );
     this.#replaceFormToCard();
+  };
+
+  #handleDeletePoint = (point) => {
+    this.#changeData(
+      UserActions.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
   };
 
   #handleCloseForm = () => {

@@ -3,12 +3,12 @@ import {nanoid} from 'nanoid';
 import {tripTypes} from '../const.js';
 import {offersByType, destinations} from './mocks.js';
 
-const getTripType = function() {
+const getTripType = () => {
   const randomIndex = getRandomInteger(0, tripTypes.length - 1);
   return tripTypes[randomIndex];
 };
 
-const getRandomOffersIds = function(type) {
+const getRandomOffersIds = (type) => {
   const randomIds = [];
   const currentOffers = offersByType.find((offer) => offer.type === type);
   const randomLength = getRandomInteger(0, currentOffers.offers.length);
@@ -21,15 +21,15 @@ const getRandomOffersIds = function(type) {
   return randomIds;
 };
 
-export const getTripPoint = function() {
+export const getTripPoint = () => {
   const type = getTripType();
   const destination = getRandomArrayElement(destinations);
 
   return ({
     id: nanoid(),
     basePrice: getRandomInteger(200, 1500),
-    dateFrom: `2019-07-${getRandomInteger(10, 14)}T10:${getRandomInteger(30, 55)}:56.845Z`,
-    dateTo: `2019-07-${14, 20}T14:${getRandomInteger(30, 55)}:13.375Z`,
+    dateFrom: `2022-09-${getRandomInteger(10, 20)}T10:${getRandomInteger(30, 55)}:56.845Z`,
+    dateTo: `2022-09-${getRandomInteger(20, 26)}T14:${getRandomInteger(30, 55)}:13.375Z`,
     destination: destination.id,
     offers: getRandomOffersIds(type),
     type
