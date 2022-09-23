@@ -14,7 +14,8 @@ const UserActions = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 const FilterTypes = {
@@ -22,4 +23,9 @@ const FilterTypes = {
   FUTURE: 'future'
 };
 
-export {tripTypes, SortType, UserActions, UpdateType, FilterTypes};
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT'
+};
+
+export {tripTypes, SortType, UserActions, UpdateType, FilterTypes, Method};

@@ -1,6 +1,7 @@
 import SortView from '../view/sort-view.js';
 import PointsListView from '../view/points-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
+import LoadingView from '../view/loading-view.js';
 import {remove, render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
@@ -18,11 +19,13 @@ export default class TripPointsPresenter {
   #sortComponent = null;
   #pointsListComponent = new PointsListView();
   #noPointsComponent = null;
+  #loadingComponent = new LoadingView();
 
   #currentSortType = SortType.DAY;
   #filterType = FilterTypes.EVERYTHING;
   #pointPresenter = new Map();
   #newPointPresenter = null;
+  #isLoading = true;
 
   constructor(tripPointsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#tripPointsContainer = tripPointsContainer;
@@ -92,6 +95,11 @@ export default class TripPointsPresenter {
         this.#clearTripPoints({resetSortType: true});
         this.#renderTripPoints();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTripPoints();
+        break;
     }
   };
 
@@ -118,6 +126,7 @@ export default class TripPointsPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
+    remove(this.#loadingComponent);
     remove(this.#sortComponent);
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
@@ -139,7 +148,15 @@ export default class TripPointsPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#tripPointsContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderTripPoints = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     const points = this.points;
     if (points.length === 0) {
       this.#renderNoPoints();

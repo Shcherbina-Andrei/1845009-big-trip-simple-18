@@ -49,7 +49,7 @@ const createDestinationTemplate = (tripDestination, allDestinations, type) => {
     `<label class="event__label  event__type-output" for="event-destination-1">
        ${type ? formatFirstLetterToUpperCase(type) : ''}
      </label>
-     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripDestination ? he.encode(tripDestination.name) : ''}" list="destination-list-1" required>
+     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripDestination ? tripDestination.name : ''}" list="destination-list-1" required>
      <datalist id="destination-list-1">
        ${destinationsOptions}
      </datalist>`);
@@ -68,7 +68,7 @@ const createPriceTemplate = (price) => (
        <span class="visually-hidden">${price}</span>
        &euro;
      </label>
-     <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price ? he.encode(price) : ''}" required>`
+     <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" required>`
 );
 
 const createOffersTemplate = (currentOffers, offersByType) => {
