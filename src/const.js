@@ -25,7 +25,9 @@ const FilterTypes = {
 
 const Method = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
 export {tripTypes, SortType, UserActions, UpdateType, FilterTypes, Method};

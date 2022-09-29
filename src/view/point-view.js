@@ -20,7 +20,6 @@ const createTemplateOffers = (offers) => {
 
 const createPointTemplate = (point, destination, offers) => {
   const {basePrice, type, dateFrom, dateTo} = point;
-  console.log(destination);
   const {name} = destination;
   const eventDate = formatStringToDate(dateFrom);
 

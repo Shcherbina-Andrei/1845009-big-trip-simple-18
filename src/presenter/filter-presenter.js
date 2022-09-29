@@ -6,6 +6,7 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointsModel = null;
+  #filterIsDisabled;
 
   #filterComponent = null;
 
@@ -33,8 +34,9 @@ export default class FilterPresenter {
 
   init = () => {
     const filters = this.filters;
+    this.#filterIsDisabled = !(this.#pointsModel.availabilityFuturePoints);
     const prevFilterComponent = this.#filterComponent;
-    this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
+    this.#filterComponent = new FilterView(filters, this.#filterModel.filter, this.#filterIsDisabled);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

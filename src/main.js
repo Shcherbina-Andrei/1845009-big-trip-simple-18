@@ -38,11 +38,12 @@ const handleNewPointButtonClick = () => {
 
 filterPresenter.init();
 tripPointsPresenter.init();
-offersModel.init();
-destinationsModel.init();
-pointsModel.init()
+
+Promise.all([offersModel.init(), destinationsModel.init()])
+  .then(() => pointsModel.init())
   .finally(() => {
     render(newPointButtonComponent, mainTripHeaderElement, RenderPosition.BEFOREEND);
     newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
   });
+
 
