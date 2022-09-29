@@ -55,23 +55,59 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
   };
 
-  destroy = function() {
+  destroy = () => {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   };
 
-  resetView = function() {
+  resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   };
 
-  #replaceCardToForm = function() {
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true
+      });
+    }
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  };
+
+  #replaceCardToForm = () => {
     this.#pointEditComponent = new PointEditView(this.#destinations, this.#allOffers, this.#point, this.#currentOffersByType);
     this.#pointEditComponent.setSubmitFormHandler(this.#handleSubmitForm);
     this.#pointEditComponent.setCloseFormHandler(this.#handleCloseForm);
@@ -82,7 +118,7 @@ export default class PointPresenter {
     this.#mode = Mode.EDITING;
   };
 
-  #replaceFormToCard = function() {
+  #replaceFormToCard = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
@@ -106,7 +142,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point
     );
-    this.#replaceFormToCard();
   };
 
   #handleDeletePoint = (point) => {

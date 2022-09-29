@@ -1,14 +1,31 @@
-import {offersByType} from '../mock/mocks.js';
+import {UpdateType} from '../const.js';
+import Observable from '../framework/observable.js';
 
-export default class OffersModel {
-  #offersByType = offersByType;
+export default class OffersModel extends Observable{
+  #pointsApiService = null;
+  #offersByType = [];
+
+  constructor(pointsApiService) {
+    super();
+    this.#pointsApiService = pointsApiService;
+  }
 
   get offersByType() {
     return this.#offersByType;
   }
 
+  init = async () => {
+    try {
+      this.#offersByType = await this.#pointsApiService.offers;
+    } catch(err) {
+      this.#offersByType = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  };
+
   getCurrentOffersByType = (point) => {
-    const currentOffersByType = this.#offersByType.find((offer) => offer.type === point.type);
+    const currentOffersByType = this.offersByType.find((offer) => offer.type === point.type);
     return currentOffersByType;
   };
 
