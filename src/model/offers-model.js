@@ -34,8 +34,6 @@ export default class OffersModel extends Observable{
     if (currentOffersByType) {
       const selectedOffers = currentOffersByType.offers.filter((offer) => point.offers.includes(offer.id));
       return selectedOffers;
-    } else {
-      return null;
     }
   };
 }

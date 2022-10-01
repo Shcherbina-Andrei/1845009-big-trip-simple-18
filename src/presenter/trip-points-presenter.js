@@ -67,6 +67,9 @@ export default class TripPointsPresenter {
   createPoint = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterTypes.EVERYTHING);
+    if (this.#pointsModel.points.length === 0) {
+      render(this.#pointsListComponent, this.#tripPointsContainer);
+    }
     this.#newPointPresenter.init(callback, this.#offersModel, this.#destinationsModel);
   };
 
