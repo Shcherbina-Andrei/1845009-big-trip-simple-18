@@ -13,6 +13,7 @@
   "scripts": {
     "lint": "eslint src/",
     "build": "webpack --mode production",
+    "deploy": "gh-pages -d build",
     "start": "webpack serve --mode development --open"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "css-loader": "6.7.1",
     "eslint": "8.19.0",
     "eslint-config-htmlacademy": "6.0.0",
+    "gh-pages": "^4.0.0",
     "nanoid": "3.3.4",
     "style-loader": "3.3.1",
     "webpack": "5.73.0",
